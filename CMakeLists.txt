@@ -32,7 +32,8 @@ message("Build type: " ${CMAKE_BUILD_TYPE})
 enable_language(C ASM)
 
 # Create an executable object type
-add_executable(${CMAKE_PROJECT_NAME})
+add_executable(${CMAKE_PROJECT_NAME}
+        )
 
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)
@@ -40,6 +41,7 @@ add_subdirectory(cmake/stm32cubemx)
 # Link directories setup
 target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined library search paths
+        Drivers/CMSIS/DSP/Lib
 )
 
 # Add sources to executable
@@ -59,12 +61,19 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
         Bsp
         User_Driver
         User_Driver/Motor_Driver
+        User_Driver/Application
+        User_Driver/Components
+        User_Driver/Components/Algorithm
+        User_Driver/Components/Devices
+        User_Driver/Config
         Task
+        Drivers/CMSIS/DSP/Include
 )
 
 # Add project symbols (macros)
 target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined symbols
+        ARM_MATH_CM4
 )
 
 # Remove wrong libob.a library dependency when using cpp files
@@ -73,6 +82,8 @@ list(REMOVE_ITEM CMAKE_C_IMPLICIT_LINK_LIBRARIES ob)
 # Add linked libraries
 target_link_libraries(${CMAKE_PROJECT_NAME}
     stm32cubemx
+        arm_cortexM4lf_math
+
 
     # Add user defined libraries
 )
